@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartJustice — Suivi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background:#f4f6fb; font-family:Arial,sans-serif; }
+        .card-suivi { background:white; border-radius:12px; padding:32px; box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+        .btn-chercher { background:#1a1a2e; color:white; border:none; padding:10px 28px; border-radius:8px; }
+        .btn-chercher:hover { background:#2d2d4e; color:white; }
+        .statut-badge { padding:6px 16px; border-radius:20px; font-size:0.85rem; display:inline-block; }
+        .statut-recu { background:#e3f2fd; color:#1565c0; }
+        .statut-en_cours { background:#fff3e0; color:#e65100; }
+        .statut-traite { background:#e8f5e9; color:#2e7d32; }
+        .statut-classe { background:#f3e5f5; color:#6a1b9a; }
+    </style>
+</head>
+<body>
+<div class="container mt-5 pb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card-suivi">
+                <h4 style="color:#1a1a2e;">Suivre mon signalement</h4>
+                <p class="text-muted">Entrez votre code anonyme pour consulter le statut.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="text" name="code" class="form-control"
+                               placeholder="Ex: SJ-A1B2C3D4"
+                               value="{{ code|default:'' }}"
+                               style="font-family:monospace;letter-spacing:2px;">
+                        <button class="btn-chercher btn" type="submit">Rechercher</button>
+                    </div>
+                </form>
+                {% if erreur %}
+                <div class="alert alert-danger">{{ erreur }}</div>
+                {% endif %}
+                {% if signalement %}
+                <hr>
+                <div class="mb-3">
+                    <small class="text-muted">Code anonyme</small>
+                    <div style="font-family:monospace;font-size:1.2rem;font-weight:bold;color:#1a1a2e;">{{ signalement.code_anonyme }}</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Type de signalement</small>
+                    <div class="fw-semibold">{{ signalement.get_type_signalement_display }}</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Tribunal concerne</small>
+                    <div class="fw-semibold">{{ signalement.tribunal_concerne }}</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Date de soumission</small>
+                    <div class="fw-semibold">{{ signalement.date_soumission|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">Statut actuel</small><br>
+                    <span class="statut-badge statut-{{ signalement.statut }}">
+                        {{ signalement.get_statut_display }}
+                    </span>
+                </div>
+                {% endif %}
+                <div class="mt-4">
+                    <a href="/signalement/" class="text-muted small">Nouveau signalement</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

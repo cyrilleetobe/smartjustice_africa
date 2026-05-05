@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartJustice Africa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing:border-box; }
+        body { font-family:Arial,sans-serif; margin:0; padding:0; background:#f4f6fb; }
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            color:white; padding:80px 0 60px; text-align:center;
+        }
+        .hero h1 { font-size:2.4rem; font-weight:bold; margin-bottom:12px; }
+        .hero p { font-size:1.1rem; color:#aac; max-width:600px; margin:0 auto 32px; }
+        .hero-badge { display:inline-block; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:6px 16px; font-size:0.82rem; margin:0 6px 12px; }
+        .btn-hero { background:white; color:#1a1a2e; border:none; padding:14px 32px; border-radius:8px; font-size:1rem; font-weight:bold; text-decoration:none; display:inline-block; margin:6px; }
+        .btn-hero:hover { background:#f0f0f0; color:#1a1a2e; }
+        .btn-hero-outline { background:transparent; color:white; border:2px solid white; padding:14px 32px; border-radius:8px; font-size:1rem; text-decoration:none; display:inline-block; margin:6px; }
+        .btn-hero-outline:hover { background:white; color:#1a1a2e; }
+        .stat-hero { text-align:center; padding:16px; }
+        .stat-hero .number { font-size:2.5rem; font-weight:bold; color:#1a1a2e; }
+        .stat-hero .label { color:#888; font-size:0.9rem; margin-top:4px; }
+        .feature-card { background:white; border-radius:12px; padding:28px; box-shadow:0 2px 8px rgba(0,0,0,0.07); height:100%; }
+        .feature-icon { font-size:2.2rem; margin-bottom:12px; }
+        .feature-title { font-size:1.05rem; font-weight:bold; color:#1a1a2e; margin-bottom:8px; }
+        .feature-desc { color:#666; font-size:0.88rem; line-height:1.6; }
+        .tech-badge { display:inline-block; background:#f0f4ff; color:#3730a3; border-radius:6px; padding:4px 12px; font-size:0.78rem; margin:3px; }
+        .footer { background:#1a1a2e; color:#888; text-align:center; padding:24px; font-size:0.85rem; }
+        .navbar-sj { background:#1a1a2e; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
+        .navbar-sj .brand { color:white; font-weight:bold; font-size:1rem; text-decoration:none; }
+        .navbar-sj a { color:#ccc; text-decoration:none; font-size:0.88rem; margin-left:20px; }
+        .navbar-sj a:hover { color:white; }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar-sj">
+    <a href="/" class="brand">&#9878; SmartJustice Africa</a>
+    <div>
+        <a href="/cartographie/carte/">Carte</a>
+        <a href="/signalement/">Signalement</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/login/" style="background:rgba(255,255,255,0.1);padding:6px 14px;border-radius:6px;color:white;">Connexion</a>
+    </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+    <div class="container">
+        <div class="mb-3">
+            <span class="hero-badge">IA Explicable</span>
+            <span class="hero-badge">Big Data Judiciaire</span>
+            <span class="hero-badge">Cybersecurite AES-256</span>
+        </div>
+        <h1>SmartJustice Africa</h1>
+        <p>Aide a la decision judiciaire par intelligence artificielle — equitable, explicable et securisee pour les tribunaux du Cameroun.</p>
+        <a href="/dashboard/" class="btn-hero">Acceder au dashboard</a>
+        <a href="/signalement/" class="btn-hero-outline">Signalement anonyme</a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="container py-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-hero">
+                <div class="number">{{ nb_tribunaux }}</div>
+                <div class="label">Tribunaux connectes</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-hero">
+                <div class="number">{{ total_dossiers }}</div>
+                <div class="label">Dossiers dans le systeme</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-hero">
+                <div class="number">{{ total_signalements }}</div>
+                <div class="label">Signalements anonymes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <h4 class="text-center mb-4" style="color:#1a1a2e;">Fonctionnalites du systeme</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="feature-card">
+                <div class="feature-icon">&#127759;</div>
+                <div class="feature-title">Cartographie judiciaire</div>
+                <div class="feature-desc">Carte interactive des tribunaux de Yaounde, Douala et Bafoussam avec statistiques en temps reel.</div>
+                <div class="mt-3"><a href="/cartographie/carte/" style="color:#1a1a2e;font-size:0.85rem;">Voir la carte &rarr;</a></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-card">
+                <div class="feature-icon">&#128274;</div>
+                <div class="feature-title">Signalement anonyme</div>
+                <div class="feature-desc">Formulaire chiffre AES-256 pour signaler corruption, violation de droits ou fuite de donnees sans identite.</div>
+                <div class="mt-3"><a href="/signalement/" style="color:#1a1a2e;font-size:0.85rem;">Signaler &rarr;</a></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-card">
+                <div class="feature-icon">&#128196;</div>
+                <div class="feature-title">Audit trail immuable</div>
+                <div class="feature-desc">Journal SHA-256 de toutes les actions du systeme. Chaque entree est verifiable et non modifiable.</div>
+                <div class="mt-3"><a href="/securite/tableau/" style="color:#1a1a2e;font-size:0.85rem;">Voir l'audit &rarr;</a></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-card">
+                <div class="feature-icon">&#9989;</div>
+                <div class="feature-title">Conformite legale</div>
+                <div class="feature-desc">Conformite avec la loi camerounaise 2010/012 sur la cybercriminalite et le secret judiciaire.</div>
+                <div class="mt-3"><a href="/securite/conformite/" style="color:#1a1a2e;font-size:0.85rem;">Voir conformite &rarr;</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stack technologique -->
+    <div class="text-center py-3">
+        <h6 style="color:#888;font-size:0.82rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Stack technologique</h6>
+        <span class="tech-badge">Django 6</span>
+        <span class="tech-badge">Python 3.14</span>
+        <span class="tech-badge">Folium / Leaflet</span>
+        <span class="tech-badge">Chart.js</span>
+        <span class="tech-badge">AES-256 Fernet</span>
+        <span class="tech-badge">SHA-256</span>
+        <span class="tech-badge">Django REST Framework</span>
+        <span class="tech-badge">Bootstrap 5</span>
+        <span class="tech-badge">SQLite</span>
+    </div>
+</div>
+
+<div class="footer">
+    SmartJustice Africa &copy; 2025 · KEYCE Master 1 IA × Big Data × Cybersecurite · Projet 11
+</div>
+
+</body>
+</html>

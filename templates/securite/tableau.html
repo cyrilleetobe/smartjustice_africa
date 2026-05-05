@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartJustice — Securite</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background:#f4f6fb; font-family:Arial,sans-serif; margin:0; }
+        .header { background:#1a1a2e; color:white; padding:16px 24px; }
+        .header h1 { font-size:1.4rem; margin:0; }
+        .stat-card { background:white; border-radius:10px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.08); text-align:center; }
+        .stat-number { font-size:2rem; font-weight:bold; }
+        .audit-table { background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+        .badge-critical { background:#fdecea; color:#c62828; padding:3px 10px; border-radius:20px; font-size:0.8rem; }
+        .badge-warning { background:#fff8e1; color:#f57f17; padding:3px 10px; border-radius:20px; font-size:0.8rem; }
+        .badge-info { background:#e3f2fd; color:#1565c0; padding:3px 10px; border-radius:20px; font-size:0.8rem; }
+        .badge-action { background:#f3e5f5; color:#6a1b9a; padding:3px 10px; border-radius:20px; font-size:0.78rem; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>SmartJustice Africa — Tableau de Securite</h1>
+    <small>Audit trail · Alertes · RBAC</small>
+</div>
+<div class="container-fluid mt-3 pb-4">
+
+    <!-- Compteurs alertes -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#c62828;">{{ alertes_critiques }}</div>
+                <div class="text-muted">Alertes critiques</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#f57f17;">{{ alertes_warning }}</div>
+                <div class="text-muted">Avertissements</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#1565c0;">{{ alertes_info }}</div>
+                <div class="text-muted">Informations</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number" style="color:#1a1a2e;">{{ total_signalements }}</div>
+                <div class="text-muted">Signalements total</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Audit trail -->
+        <div class="col-md-8">
+            <div class="audit-table">
+                <div style="padding:16px 20px;border-bottom:1px solid #f0f0f0;">
+                    <h6 style="margin:0;color:#1a1a2e;">Journal d'audit (50 derniers)</h6>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="table table-hover mb-0">
+                        <thead style="background:#f8f9fa;">
+                            <tr>
+                                <th style="font-size:0.85rem;">Horodatage</th>
+                                <th style="font-size:0.85rem;">Utilisateur</th>
+                                <th style="font-size:0.85rem;">Action</th>
+                                <th style="font-size:0.85rem;">Description</th>
+                                <th style="font-size:0.85rem;">IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for audit in audits %}
+                            <tr>
+                                <td style="font-size:0.82rem;white-space:nowrap;">{{ audit.horodatage|date:"d/m/Y H:i" }}</td>
+                                <td style="font-size:0.82rem;">{{ audit.utilisateur|default:"Anonyme" }}</td>
+                                <td><span class="badge-action">{{ audit.get_action_display }}</span></td>
+                                <td style="font-size:0.82rem;">{{ audit.description|truncatechars:50 }}</td>
+                                <td style="font-size:0.82rem;font-family:monospace;">{{ audit.adresse_ip|default:"-" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center text-muted py-4">Aucune action enregistree.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertes + Roles -->
+        <div class="col-md-4">
+            <!-- Alertes actives -->
+            <div class="audit-table mb-3">
+                <div style="padding:16px 20px;border-bottom:1px solid #f0f0f0;">
+                    <h6 style="margin:0;color:#1a1a2e;">Alertes actives</h6>
+                </div>
+                <div style="padding:12px 16px;">
+                    {% for alerte in alertes %}
+                    <div class="mb-2 p-2" style="border-radius:8px;background:#f8f9fa;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge-{{ alerte.niveau }}">{{ alerte.get_niveau_display }}</span>
+                            <small class="text-muted">{{ alerte.date_creation|date:"d/m H:i" }}</small>
+                        </div>
+                        <div style="font-size:0.85rem;font-weight:600;margin-top:4px;">{{ alerte.titre }}</div>
+                        <div style="font-size:0.8rem;color:#666;">{{ alerte.description|truncatechars:60 }}</div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-2" style="font-size:0.85rem;">Aucune alerte active.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Roles RBAC -->
+            <div class="audit-table">
+                <div style="padding:16px 20px;border-bottom:1px solid #f0f0f0;">
+                    <h6 style="margin:0;color:#1a1a2e;">Utilisateurs actifs (RBAC)</h6>
+                </div>
+                <div style="padding:12px 16px;">
+                    {% for r in roles %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <div style="font-size:0.85rem;font-weight:600;">{{ r.utilisateur.username }}</div>
+                            <div style="font-size:0.78rem;color:#888;">{{ r.tribunal }}</div>
+                        </div>
+                        <span class="badge-info">{{ r.get_role_display }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-2" style="font-size:0.85rem;">Aucun utilisateur configure.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

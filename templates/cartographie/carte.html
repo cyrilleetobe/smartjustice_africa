@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartJustice — Carte des Tribunaux</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background:#f4f6fb; font-family:Arial,sans-serif; margin:0; padding:0; }
+        .header { background:#1a1a2e; color:white; padding:16px 24px; }
+        .header h1 { font-size:1.4rem; margin:0; }
+        .carte-container { height:500px; border-radius:12px; overflow:hidden; }
+        .carte-container iframe, .carte-container div { width:100% !important; height:100% !important; }
+        .stat-card { background:white; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+        .stat-card h5 { color:#1a1a2e; font-size:0.9rem; margin-bottom:4px; }
+        .taux-bar { height:8px; border-radius:4px; background:#e0e0e0; margin-top:6px; }
+        .taux-fill { height:8px; border-radius:4px; }
+        .badge-ville { background:#eef2ff; color:#3730a3; font-size:0.75rem; padding:2px 8px; border-radius:20px; display:inline-block; margin-bottom:6px; }
+        .stat-number { font-size:1.3rem; font-weight:bold; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>SmartJustice Africa — Carte des Tribunaux</h1>
+    <small>Tableau de bord cartographique · Cameroun</small>
+</div>
+<div class="container-fluid mt-3 pb-4">
+    <div class="row g-3">
+        <div class="col-md-8">
+            <div class="carte-container">
+                {{ carte_html|safe }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h6 class="text-muted mb-3">Statistiques par tribunal</h6>
+            {% for t in tribunaux %}
+            <div class="stat-card mb-3">
+                <h5>{{ t.nom }}</h5>
+                <span class="badge-ville">{{ t.ville }}</span>
+                <div class="row mt-2 text-center">
+                    <div class="col-4">
+                        <div class="stat-number" style="color:#1a1a2e;">{{ t.dossiers_total }}</div>
+                        <small class="text-muted">Total</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-number" style="color:#e74c3c;">{{ t.dossiers_en_attente }}</div>
+                        <small class="text-muted">Attente</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-number" style="color:#27ae60;">{{ t.dossiers_traites }}</div>
+                        <small class="text-muted">Traites</small>
+                    </div>
+                </div>
+                <div class="taux-bar mt-2">
+                    {% with taux=t.taux_traitement %}
+                    <div class="taux-fill" style="width:{{ taux }}%;background:{% if taux > 70 %}#27ae60{% elif taux > 40 %}#f39c12{% else %}#e74c3c{% endif %};"></div>
+                    {% endwith %}
+                </div>
+                <small class="text-muted">Taux de traitement : <strong>{{ t.taux_traitement }}%</strong></small>
+            </div>
+            {% empty %}
+            <div class="alert alert-warning">Aucun tribunal enregistre.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
